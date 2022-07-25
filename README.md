@@ -1,6 +1,5 @@
 # Install
-App can only run locally in debug mode.
-Source code includes vast comments and each step description
+App can only run locally in debug mode
 
 Django 3.2.11
 
