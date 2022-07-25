@@ -13,7 +13,7 @@ class QuizView(APIView):
     # path /quiz/
     @swagger_auto_schema(
         operation_description="Get all the Quizzes (active and not active)\n"
-                              "а",
+                              "",
         operation_summary='Get all the Quizzes (active and not active)',
     )
     def get(self, request, **kwargs):
