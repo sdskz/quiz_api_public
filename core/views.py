@@ -12,8 +12,8 @@ from drf_yasg.utils import swagger_auto_schema
 class QuizView(APIView):
     # path /quiz/
     @swagger_auto_schema(
-        operation_description="Получение всех Quiz из бд. Никакой сортировки нет\n"
-                              "Пользователь может выбрать Quiz по id и затем ответить на него через post запрос, используя в url выбранный id в качестве идентификатора",
+        operation_description="Get all the Quizzes (active and not active)\n"
+                              "а",
         operation_summary='Get all the Quizzes (active and not active)',
     )
     def get(self, request, **kwargs):
@@ -24,11 +24,11 @@ class QuizView(APIView):
 class QuizChosenView(APIView):
     # path /quiz/<int:quiz>/
     @swagger_auto_schema(
-        operation_description="Получение определенного Quiz через его id в url\n"
-                              "id должен быть integer (никак не валидируется)\n"
-                              "Если id указать чем-либо кроме целого числа, будет 404\n"
-                              "Если указать id правильно (целым числом), но в бд нет такого Quiz, то ошибка обработается, вернется 400 и ответ в json"
-                              "Пользователь может выбрать Quiz по id и затем ответить на него через post запрос, используя в url выбранный id в качестве идентификатора\n",
+        operation_description="Getting Quiz by it's id\n"
+                              "id must be integer\n"
+                              "404 returned if id is not integer\n"
+                              "if you send wrong id that does not exist in database, 400 returned"
+                              "user can chose any Quiz he want using Quiz id and then respond using POST request (Quiz id must be in the url endpoint)\n",
         operation_summary='Get a particular Quiz by its id',
     )
     def get(self, request, **kwargs):
@@ -40,11 +40,11 @@ class QuizChosenView(APIView):
             return Response({"response": f'Quiz with id {kwargs["quiz"]} does not exist!'}, status=status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(
-        operation_description="Пользователь отвечает серверу на Quiz, идентификатор Quiz включен в url\n"
-                              "user_id - нужно указать уникальный (один юзер два раза не может участвовать в опросе, иначе придет 400)\n"
-                              "quiz - текущий квиз, на который дается ответ (если пользователь решит вставить другой id квиза, то система автоматически подставит id, который пользователь указал в url)\n"
-                              "user_answer_text - можно указывать любой из suggested_answers в этом квизе (или вставить свой кастомный ответ)\n"
-                              "user_answer_text - проходит валидацию (если кастомные ответы не разрешены, система ответит 400)\n",
+        operation_description="User sends a respond to Quiz, url must contain Quiz id\n"
+                              "user_id - must be unique (if user will participate twice, 400 returned)\n"
+                              "quiz - a Quiz user replies to\n"
+                              "user_answer_text - user can choose any answer from suggested_answers\n"
+                              "user_answer_text - validated if there is a flag NO_CUSTOM_ANSWERS (for some quizzies custom answers are allowed)\n",
         operation_summary='Post an Answer to a chosen Quiz',
         request_body=UserQuizResultsSerializer,
     )
@@ -87,8 +87,8 @@ class QuizChosenView(APIView):
 class QuizViewActive(APIView):
     # path /quiz/active/
     @swagger_auto_schema(
-        operation_description="Отсортированные Quiz из бд, активные на текущее время\n"
-                              "Пользователь может выбрать Quiz по id и затем ответить на него через post запрос, используя в url выбранный id в качестве идентификатора",
+        operation_description="Sorted Quizzies from database, active now\n"
+                              "",
         operation_summary='Get all the Quizzes (active)',
     )
     def get(self, request, **kwargs):
@@ -106,9 +106,9 @@ class AnswerView(APIView):
     # path /answers/<int:user_id>/
     # user_id defines which user's Answers to show
     @swagger_auto_schema(
-        operation_description="Получение всех ответов пользователя, используя id пользователя\n"
-                              "Получаемый id должен быть всегда integer (id никак не валидируется)\n"
-                              "Будет ответ 404 если указать не число, 400 если указано число, но пользователь с таким id не найден в бд",
+        operation_description="Getting all the user's answers by user id\n"
+                              "id must be integer\n"
+                              "404 returned if id is not integer, 400 returned if no user with this id exists",
         operation_summary='Get all the Answers by user_id',
     )
     def get(self, request, **kwargs):
